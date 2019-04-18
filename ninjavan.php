@@ -179,13 +179,20 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     {
     	
     	$now = strtotime(date('Y-m-d H:i:s'));
-    	if (isset($_SESSION['exp_token'])) {
+    	if (!empty($_SESSION['exp_token'])) {
     		$token_session = $_SESSION['exp_token'];
-    		if ($now >= $token_session) {
-	    		request_access_token();
+    		if ($now > $token_session) {
+	    		$data = request_access_token();
+	    	} else {
+	    		$data = $_SESSION;
 	    	}
     	} else {
-	    	request_access_token();
+	    	$data = request_access_token();
+    	}
+
+    	if ($data != false) {
+    		// Session was exists, output will be session.
+    		var_dump($_SESSION);
     	}
     }
 
@@ -197,7 +204,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     		$sesi_time = $response->expires;
     		$_SESSION['access_token'] = $response->access_token;
     		$_SESSION['exp_token'] = $response->expires;
-    		var_dump($_SESSION);
     	} else {
     		return false;
     	}
