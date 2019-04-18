@@ -177,32 +177,48 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
     function test_plugin_work()
     {
-    	request_access_token();
+    	
+    	$now = strtotime(date('Y-m-d H:i:s'));
+    	if (isset($_SESSION['exp_token'])) {
+    		$token_session = $_SESSION['exp_token'];
+    		if ($now >= $token_session) {
+	    		request_access_token();
+	    	}
+    	} else {
+	    	request_access_token();
+    	}
     }
 
     function request_access_token()
     {
     	$url = $_SESSION['url'].'/SG/2.0/oauth/access_token';
     	$response = curl_post($url);
-    	var_dump($response);
-
+    	if ($response != false) {
+    		$sesi_time = $response->expires;
+    		$_SESSION['access_token'] = $response->access_token;
+    		$_SESSION['exp_token'] = $response->expires;
+    		var_dump($_SESSION);
+    	} else {
+    		return false;
+    	}
     }
 
     function curl_post($url)
     {
-    	$curl = new Curl();
-    	$curl->setHeader('Content-Type', 'application/json');
-    	$curl->setHeader('Accept', 'application/json');
-    	$curl->post($url, [
-    		'client_id' => '13f1d7d468cb4b8e9873f4794b3e9e54',
-    		'client_key'=> 'd9f14e78fccf43a3b48ee08bcc710631',
+    	$data = json_encode([
+    		'client_id' => $_SESSION['client_id'],
+    		'client_secret'=> $_SESSION['client_key'],
     		'grant_type'=> 'client_credentials'
     	]);
-  //   	if ($curl->error) {
-		//     return 'Error: ' . $curl->errorCode . ': ' . $curl->errorMessage . "\n";
-		// } else {
+    	$curl = new Curl;
+    	$curl->setHeader('Content-Type', 'application/json');
+    	$curl->setHeader('Accept', 'application/json');
+    	$curl->post($url, $data);
+    	if ($curl->error) {
+		    return false;
+		} else {
 		    return $curl->response;
-		// }
+		}
     }
 
     function afterCheckout()
