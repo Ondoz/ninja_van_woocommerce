@@ -1,10 +1,10 @@
 <?php 
     function ninja_admin()
     {
-        add_menu_page('Ninja Van', 'Ninja Van', 'manage_options', 'ninjavan_opt', 'main_view_pwavald', 'dashicons-admin-site');
+        add_menu_page('Ninja Van', 'Ninja Van', 'manage_options', 'ninjavan_opt', 'main_view_ninja', 'dashicons-admin-site');
     }
-?>
 
-<div style="float:right">
-	
-</div>
+    function main_view_ninja()
+    {
+        LoadView('option');
+    }

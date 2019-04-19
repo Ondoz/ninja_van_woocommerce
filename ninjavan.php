@@ -12,6 +12,8 @@
 include dirname(__FILE__) . '/vendor/autoload.php';
 include dirname(__FILE__) . '/app/activation.php';
 include dirname(__FILE__) . '/app/init_menu.php';
+include dirname(__FILE__) . '/app/proccess.php';
+
 register_activation_hook( __FILE__, 'create_db_ninja' );
 register_deactivation_hook( __FILE__, 'delete_db_ninja' );
 
