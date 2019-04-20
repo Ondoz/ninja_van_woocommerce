@@ -408,7 +408,7 @@
             dataType: 'JSON',
             data: {
                 method: 'create_order',
-                access_token: e.access_token,
+                access_tokn: e.access_token,
                 service_level: serv_lvl,
                 rtn: req_track_n,
                 order_id: ord_id,
