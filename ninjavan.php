@@ -21,8 +21,6 @@ add_action('admin_menu', 'ninja_admin');
 
 use \Curl\Curl;
 
-session_start();
-
 if ( ! defined( 'WPINC' ) ) {
     die;
 }
@@ -65,33 +63,12 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
  
                 function init_form_fields() { 
                 	$this->form_fields = array(
- 
 			         	'enabled' => array(
 			              'title' => __( 'Enable', 'ninjavan' ),
 			              'type' => 'checkbox',
 			              'description' => __( 'Enable this shipping.', 'ninjavan' ),
 			              'default' => 'yes'
 			            ),
-
-			            'sandbox' => array(
-			            	'title' 		=> __('Sandbox', 'ninjavan'),
-			            	'type' 			=> 'checkbox',
-			            	'description'	=> __('Enable the sandbox mode', 'ninjavan'),
-			            	'default'		=> 'no'
-			            ),
-			 
-			         	'client_id' => array(
-				            'title' => __( 'Client ID', 'ninjavan' ),
-				            'type' => 'text',
-				            'description' => __( 'The client id, you can get it from ninjavan site.', 'ninjavan' ),
-			            ),
-			 			
-			 			'client_key' => array(
-				            'title' => __( 'Client Key', 'ninjavan' ),
-				            'type' => 'password',
-				            'description' => __( 'The client key, you can get it from ninjavan site.', 'ninjavan' ),
-			            ),
-			 			
 			        );
  
                 }
@@ -203,9 +180,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         ]);
     	$response = curl_post($url, $data);
     	if ($response != false) {
-    		$sesi_time = $response->expires;
-    		$_SESSION['access_token'] = ;
-    		$_SESSION['exp_token'] = ;
             $data = [
                 'status'            => 200,
                 'access_token'      => $response->access_token,
