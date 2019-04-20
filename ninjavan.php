@@ -204,12 +204,25 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     	$response = curl_post($url, $data);
     	if ($response != false) {
     		$sesi_time = $response->expires;
-    		$_SESSION['access_token'] = $response->access_token;
-    		$_SESSION['exp_token'] = $response->expires;
-            return $_SESSION;
+    		$_SESSION['access_token'] = ;
+    		$_SESSION['exp_token'] = ;
+            $data = [
+                'status'            => 200,
+                'access_token'      => $response->access_token,
+                'exp_token'         => $response->expires,
+                'client_id'         => get_option('ninja_client_id'),
+                'client_secret'     => get_option('ninja_client_secret'),
+            ];
     	} else {
-            return $_SESSION;
+            $data = [
+                'status'            => 500,
+                'access_token'      => null,
+                'exp_token'         => null,
+                'client_id'         => get_option('ninja_client_id'),
+                'client_secret'     => get_option('ninja_client_secret'),
+            ];
     	}
+        return $data;
     }
 
     function curl_post($url, $data)
