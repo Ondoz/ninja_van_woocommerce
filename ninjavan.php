@@ -142,18 +142,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
                 }
             }
-
-            $data = new NinjaVan_Shipping_Method();
-
-            $_SESSION['client_id'] 	= $data->get_option('client_id');
-            $_SESSION['client_key'] = $data->get_option('client_key');
-
-            if ($data->get_option('sandbox') === 'no') {
-            	$_SESSION['url']		= 'https://api.ninjavan.co';
-            } else {
-            	$_SESSION['url']		= 'https://api-sandbox.ninjavan.co';
-            }
-
         }
     }
 
@@ -192,19 +180,25 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
     function requestApiToken()
     {
-    	
-    	
 	    $data = request_access_token();
         return $data;
     }
 
+    function api_url()
+    {
+        if (get_option('ninja_sandbox') == 1) {
+            return 'https://api-sandbox.ninjavan.co';
+        } else {
+            return 'https://api.ninjavan.co';
+        }
+    }
 
     function request_access_token()
     {
-    	$url = $_SESSION['url'].'/SG/2.0/oauth/access_token';
+    	$url = api_url().'/SG/2.0/oauth/access_token';
         $data = json_encode([
-            'client_id' => $_SESSION['client_id'],
-            'client_secret'=> $_SESSION['client_key'],
+            'client_id' => get_option('ninja_client_id'),
+            'client_secret'=> get_option('ninja_client_secret'),
             'grant_type'=> 'client_credentials'
         ]);
     	$response = curl_post($url, $data);
