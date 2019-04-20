@@ -222,6 +222,8 @@
   </div>
 </div>
 
+
+
 <script>
     $('#submitOrder').attr('disabled', true);
     $('#defaultChecked2').on('click', function(event) {
@@ -233,7 +235,26 @@
         }
     });
 
+    function create_order(e)
+    {
+        $.ajax({
+            url: '<?php bloginfo('url');?>/wp-content/plugins/ninja_van/app/request.php',
+            type: 'POST',
+            dataType: 'JSON',
+            data: {
+                method: 'create_order',
+                access_token: e.access_token,
+            },
+            success: function(resp)
+            {
+
+            }
+        });
+    }
+
     $('#submitOrder').click(function(event) {
+        $(this).html('<i class="fas fa-spin fa-spinner"></i> Request access token..');
+        $(this).attr('disabled', true);
         $.ajax({
             url: '<?php bloginfo('url');?>/wp-content/plugins/ninja_van/app/request.php',
             type: 'POST',
@@ -242,6 +263,9 @@
                 method: 'ship_order'
             },
             success: function(e){
+                $('#submitOrder').html('Submit Order');
+                $('#submitOrder').attr('disabled', false);
+
                 console.log(e);
             }
         })
