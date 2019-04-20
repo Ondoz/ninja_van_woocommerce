@@ -9,42 +9,129 @@
     <h1><i class="fas fa-truck"></i> Ninja Van</h1>
     <div class="row">
         <div class="col-md-12">
-            <table class="table table-bordered">
-                <thead>
-                    <td>Order ID</td>
-                    <td>Status</td>
-                    <td>Payment Method</td>
-                    <td>Created</td>
-                    <td>Action</td>
-                </thead>
-                <tbody>
-                    <?php foreach (get_all_order() as $key => $value): ?>
-                        <?php 
-                            $data  = get_order($value);
-                        ?>
-                        <?php if ($data->get_shipping_method() === 'NinjaVan Shipping'): ?>
-                            <tr>
-                                <td>#<?php echo $value;?></td>
-                                <td><?php echo ucwords($data->get_status());?></td>
-                                <td><?php echo ucwords($data->get_payment_method());?></td>
-                                <td><?php echo date('jS F Y', strtotime($data->get_date_created()));?></td>
-                                <td>
-                                    <div class="btn-group">
-                                      <button type="button" class="btn btn-primary btn-xs shopOrder" data-id="<?php echo $value;?>">Ship Order</button>
-                                      <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
-                                        <span class="caret"></span>
-                                      </button>
-                                      <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#" class="bill_det" data-id="<?php echo $value;?>">Billing Details</a></li>
-                                        <li><a href="#" class="shipDet" data-id="<?php echo $value;?>">Shipping Details</a></li>
-                                      </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endif ?>
-                    <?php endforeach ?>
-                </tbody>
-            </table>
+            <div class="panel panel-default">
+              <div class="panel-heading">Processing Order</div>
+                <table class="table table-bordered">
+                    <thead>
+                        <td>Order ID</td>
+                        <td>Payment Method</td>
+                        <td>Created</td>
+                        <td>Action</td>
+                    </thead>
+                    <tbody>
+                        <?php foreach (get_all_order() as $key => $value): ?>
+                            <?php 
+                                $data  = get_order($value);
+                            ?>
+                            <?php if ($data->get_shipping_method() === 'NinjaVan Shipping'): ?>
+                                <?php if ($data->get_status() === 'processing'): ?>
+                                    <tr>
+                                        <td>#<?php echo $value;?></td>
+                                        <td><?php echo ucwords($data->get_payment_method());?></td>
+                                        <td><?php echo date('jS F Y', strtotime($data->get_date_created()));?></td>
+                                        <td>
+                                            <div class="btn-group">
+                                              <button type="button" class="btn btn-primary btn-xs shopOrder" data-id="<?php echo $value;?>">Ship Order</button>
+                                              <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                              </button>
+                                              <ul class="dropdown-menu" role="menu">
+                                                <li><a href="#" class="bill_det" data-id="<?php echo $value;?>">Billing Details</a></li>
+                                                <li><a href="#" class="shipDet" data-id="<?php echo $value;?>">Shipping Details</a></li>
+                                              </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endif ?>
+                            <?php endif ?>
+                        <?php endforeach ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">Refunded Order</div>
+                <table class="table table-bordered">
+                    <thead>
+                        <td>Order ID</td>
+                        <td>Payment Method</td>
+                        <td>Created</td>
+                        <td>Action</td>
+                    </thead>
+                    <tbody>
+                        <?php foreach (get_all_order() as $key => $value): ?>
+                            <?php 
+                                $data  = get_order($value);
+                            ?>
+                            <?php if ($data->get_shipping_method() === 'NinjaVan Shipping'): ?>
+                                <?php if ($data->get_status() === 'refunded'): ?>
+                                    <tr>
+                                        <td>#<?php echo $value;?></td>
+                                        <td><?php echo ucwords($data->get_payment_method());?></td>
+                                        <td><?php echo date('jS F Y', strtotime($data->get_date_created()));?></td>
+                                        <td>
+                                            <div class="btn-group">
+                                              <button type="button" class="btn btn-primary btn-xs shopOrder" data-id="<?php echo $value;?>">Ship Order</button>
+                                              <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                              </button>
+                                              <ul class="dropdown-menu" role="menu">
+                                                <li><a href="#" class="bill_det" data-id="<?php echo $value;?>">Billing Details</a></li>
+                                                <li><a href="#" class="shipDet" data-id="<?php echo $value;?>">Shipping Details</a></li>
+                                              </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endif ?>
+                            <?php endif ?>
+                        <?php endforeach ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">Completed Order</div>
+                <table class="table table-bordered">
+                    <thead>
+                        <td>Order ID</td>
+                        <td>Payment Method</td>
+                        <td>Created</td>
+                        <td>Action</td>
+                    </thead>
+                    <tbody>
+                        <?php foreach (get_all_order() as $key => $value): ?>
+                            <?php 
+                                $data  = get_order($value);
+                            ?>
+                            <?php if ($data->get_shipping_method() === 'NinjaVan Shipping'): ?>
+                                <?php if ($data->get_status() === 'completed'): ?>
+                                    <tr>
+                                        <td>#<?php echo $value;?></td>
+                                        <td><?php echo ucwords($data->get_payment_method());?></td>
+                                        <td><?php echo date('jS F Y', strtotime($data->get_date_created()));?></td>
+                                        <td>
+                                            <div class="btn-group">
+                                              <button type="button" class="btn btn-primary btn-xs shopOrder" data-id="<?php echo $value;?>">Ship Order</button>
+                                              <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                              </button>
+                                              <ul class="dropdown-menu" role="menu">
+                                                <li><a href="#" class="bill_det" data-id="<?php echo $value;?>">Billing Details</a></li>
+                                                <li><a href="#" class="shipDet" data-id="<?php echo $value;?>">Shipping Details</a></li>
+                                              </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endif ?>
+                            <?php endif ?>
+                        <?php endforeach ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -191,22 +278,85 @@
         <h4 class="modal-title">Ship Order</h4>
       </div>
       <div class="modal-body">
-        <div class="form-group">
-            <label for="">Order ID</label>
-            <input type="text" class="form-control" id="order_id" readonly="true">
+        <div id="general">
+            <div class="form-group">
+                <label for="">Order ID</label>
+                <input type="text" class="form-control" id="order_id" readonly="true">
+            </div>
+            <div class="form-group">
+                <label for="">Service Level</label>
+                <select id="service_level" class="form-control">
+                    <option value="Standard">Standard</option>
+                    <option value="Express">Express</option>
+                    <option value="Sameday">Sameday</option>
+                    <option value="Nextday">Nextday</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="">Request Tracking Number</label>
+                <input type="text" class="form-control" id="rtn">
+            </div>
         </div>
-        <div class="form-group">
-            <label for="">Service Level</label>
-            <select id="service_type" class="form-control">
-                <option value="Standard">Standard</option>
-                <option value="Express">Express</option>
-                <option value="Sameday">Sameday</option>
-                <option value="Nextday">Nextday</option>
-            </select>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="pickupReq" style="margin: 0;">
+          <label class="custom-control-label" for="pickupReq" style="margin: 0;">Require pick up ?</label><br>
         </div>
-        <div class="form-group">
-            <label for="">Request Tracking Number</label>
-            <input type="number" class="form-control" id="rtn">
+        <br>
+        <div id="pickup">
+            <div class="form-group">
+                <label for="">Pickup Service Type</label>
+                <select name="pickup_service_type" class="form-control">
+                    <option value="Scheduled">Scheduled</option>
+                    <option value="On-Demand">On-Demand</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="">Pickup Service Level</label>
+                <select name="pickup_service_level" class="form-control">
+                    <option value="Standard">Standard</option>
+                    <option value="Premium">Premium</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="">Pickup Date</label>
+                <input type="date" class="form-control" id="pickup_date">
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="">Start Time</label>
+                        <input type="time" id="start_time" value="09:00:00">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="">End Time</label>
+                        <input type="time" id="end_time" value="12:00:00">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="">Delivery Date</label>
+                <input type="date" class="form-control" id="dl_date">
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="">Start Time</label>
+                        <input type="time" id="dl_start_time" value="09:00:00">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="">End Time</label>
+                        <input type="time" id="dl_end_time" value="12:00:00">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="">Pickup Instruction</label>
+                <input type="text" id="pickup_instruction" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="">Delivery Instruction</label>
+                <input type="text" id="delivery_instruction" class="form-control">
+            </div>
         </div>
         <div class="custom-control custom-checkbox">
           <input type="checkbox" class="custom-control-input" id="defaultChecked2" style="margin: 0;">
@@ -226,6 +376,7 @@
 
 <script>
     $('#submitOrder').attr('disabled', true);
+    $('#pickup').hide();
     $('#defaultChecked2').on('click', function(event) {
         var check = $(this);
         if (check.is(':checked')) {
@@ -235,8 +386,22 @@
         }
     });
 
+    $('#pickupReq').on('click', function(event) {
+        var check = $(this);
+        if (check.is(':checked')) {
+            $('#pickup').show(1000);
+            $('#general').hide(1000);
+        } else {
+            $('#pickup').hide(1000);
+            $('#general').show(1000);
+        }
+    });
+
     function create_order(e)
     {
+        var serv_lvl = $('#service_level').val();
+        var req_track_n = $('#rtn').val();
+        var ord_id = $('#order_id').val();
         $.ajax({
             url: '<?php bloginfo('url');?>/wp-content/plugins/ninja_van/app/request.php',
             type: 'POST',
@@ -244,10 +409,24 @@
             data: {
                 method: 'create_order',
                 access_token: e.access_token,
+                service_level: serv_lvl,
+                rtn: req_track_n,
+                order_id: ord_id,
+                pk_req: $('#pickupReq').val(),
+                pk_st: $('#pickup_service_type').val(),
+                pk_slv: $('#pickup_service_level').val(),
+                pk_date: $('#pickup_date').val(),
+                pk_start: $('#start_time').val(),
+                pk_end: $('#end_time').val(),
+                pk_inst: $('#pickup_instruction').val(),
+                dl_inst: $('#delivery_instruction').val(),
+                dl_date: $('#dl_date').val(),
+                dl_start: $('#dl_start_time').val(),
+                dl_end: $('#dl_end_time').val()
             },
             success: function(resp)
             {
-
+                console.log(resp);
             }
         });
     }
@@ -265,8 +444,7 @@
             success: function(e){
                 $('#submitOrder').html('Submit Order');
                 $('#submitOrder').attr('disabled', false);
-
-                console.log(e);
+                create_order(e);
             }
         })
     });
@@ -295,7 +473,6 @@
                 $('.billing_state').html(e.state);
                 $('.billing_country').html(e.country);
                 $('.billing_postcode').html(e.postcode);
-                console.log(e);
             }
         })        
     });
@@ -331,7 +508,6 @@
             success: function(e)
             {
                 $('#shipDetMod').modal('show');
-                console.log(e);
                 $('.shipping_first_name').html(e.first_name);
                 $('.shipping_last_name').html(e.last_name);
                 $('.shipping_Phone').html(e.phone);

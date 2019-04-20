@@ -212,6 +212,16 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		}
     }
 
+    function curl_create_order($url, $data, $token)
+    {
+        $curl = new Curl;
+        $curl->setHeader('Content-Type', 'application/json');
+        $curl->setHeader('Authorization', 'Bearer '.$token);
+        $curl->setHeader('Accept', 'application/json');
+        $curl->post($url, $data);
+        return $curl->response;
+    }
+
     function afterCheckout()
     {
     	$packages = WC()->shipping->get_packages();

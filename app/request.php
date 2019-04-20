@@ -20,6 +20,9 @@
         } elseif ($method === 'ship_order') {
             $data = requestApiToken();
             echo json_encode($data);
+        } elseif ($method === 'create_order') {
+            $data = create_order($_POST);
+            echo json_encode($data);
         }
     }
 
