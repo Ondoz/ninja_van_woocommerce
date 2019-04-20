@@ -2,7 +2,9 @@
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-
+<style>
+    
+</style>
 <div class="wrap">
     <h1><i class="fas fa-truck"></i> Ninja Van</h1>
     <div class="row">
@@ -27,9 +29,16 @@
                                 <td><?php echo ucwords($data->get_payment_method());?></td>
                                 <td><?php echo date('jS F Y', strtotime($data->get_date_created()));?></td>
                                 <td>
-                                    <button type="button" class="btn btn-info btn-xs bill_det" data-id="<?php echo $value;?>">Billing Details</button>
-                                    <button type="button" class="btn btn-primary btn-xs shipDet" data-id="<?php echo $value;?>">Shipping Details</button>
-                                    <button type="button" class="btn btn-success btn-xs" data-id="<?php echo $value;?>" data-toggle="modal" data-target="#shipOrder">Ship Order</button>
+                                    <div class="btn-group">
+                                      <button type="button" class="btn btn-primary btn-xs shopOrder" data-id="<?php echo $value;?>">Ship Order</button>
+                                      <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                                        <span class="caret"></span>
+                                      </button>
+                                      <ul class="dropdown-menu" role="menu">
+                                        <li><a href="#" class="bill_det" data-id="<?php echo $value;?>">Billing Details</a></li>
+                                        <li><a href="#" class="shipDet" data-id="<?php echo $value;?>">Shipping Details</a></li>
+                                      </ul>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endif ?>
@@ -179,12 +188,34 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Modal Header</h4>
+        <h4 class="modal-title">Ship Order</h4>
       </div>
       <div class="modal-body">
-        <p>Some text in the modal.</p>
+        <div class="form-group">
+            <label for="">Order ID</label>
+            <input type="text" class="form-control" id="order_id" readonly="true">
+        </div>
+        <div class="form-group">
+            <label for="">Service Level</label>
+            <select id="service_type" class="form-control">
+                <option value="Standard">Standard</option>
+                <option value="Express">Express</option>
+                <option value="Sameday">Sameday</option>
+                <option value="Nextday">Nextday</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="">Request Tracking Number</label>
+            <input type="number" class="form-control" id="rtn">
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="defaultChecked2" style="margin: 0;">
+          <label class="custom-control-label" for="defaultChecked2" style="margin: 0;">The shipping details was correct.</label><br>
+          <small>if the shipping details wasn't correct, you can edit at <a target="_blank" href="<?php bloginfo('url');?>/wp-admin/edit.php?post_type=shop_order">orders</a> or ask the customer manually.</small>
+        </div>
       </div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="submitOrder">Submit Order</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
@@ -192,6 +223,30 @@
 </div>
 
 <script>
+    $('#submitOrder').attr('disabled', true);
+    $('#defaultChecked2').on('click', function(event) {
+        var check = $(this);
+        if (check.is(':checked')) {
+            $('#submitOrder').attr('disabled', false);
+        } else {
+            $('#submitOrder').attr('disabled', true);
+        }
+    });
+
+    $('#submitOrder').click(function(event) {
+        $.ajax({
+            url: '<?php bloginfo('url');?>/wp-content/plugins/ninja_van/app/request.php',
+            type: 'POST',
+            dataType: 'JSON',
+            data: {
+                method: 'ship_order'
+            },
+            success: function(e){
+                console.log(e);
+            }
+        })
+    });
+
     $('.bill_det').click(function(event) {
         var order_id = $(this).attr('data-id');
         $.ajax({
@@ -219,6 +274,25 @@
                 console.log(e);
             }
         })        
+    });
+    $('.shopOrder').click(function(event) {
+        var order_id = $(this).attr('data-id');
+        $.ajax({
+            url: '<?php bloginfo('url');?>/wp-content/plugins/ninja_van/app/request.php',
+            type: 'POST',
+            dataType: 'JSON',
+            data: {
+                method: 'rtn',
+                id: order_id
+            },
+            success: function(e)
+            {
+                $('#order_id').val(order_id);
+                $('#shipOrder').modal('show');
+                $('#rtn').val(e);
+            }
+        }) 
+        
     });
     $('.shipDet').click(function(event) {
         var order_id = $(this).attr('data-id');

@@ -193,45 +193,33 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     function requestApiToken()
     {
     	
-    	$now = strtotime(date('Y-m-d H:i:s'));
-    	if (!empty($_SESSION['exp_token'])) {
-    		$token_session = $_SESSION['exp_token'];
-    		if ($now > $token_session) {
-	    		$data = request_access_token();
-	    	} else {
-	    		$data = $_SESSION;
-	    	}
-    	} else {
-	    	$data = request_access_token();
-    	}
-
-    	if ($data != false) {
-    		// Session was exists, output will be session.
-    		return true;
-    	}
+    	
+	    $data = request_access_token();
+        return $data;
     }
 
 
     function request_access_token()
     {
     	$url = $_SESSION['url'].'/SG/2.0/oauth/access_token';
-    	$response = curl_post($url);
+        $data = json_encode([
+            'client_id' => $_SESSION['client_id'],
+            'client_secret'=> $_SESSION['client_key'],
+            'grant_type'=> 'client_credentials'
+        ]);
+    	$response = curl_post($url, $data);
     	if ($response != false) {
     		$sesi_time = $response->expires;
     		$_SESSION['access_token'] = $response->access_token;
     		$_SESSION['exp_token'] = $response->expires;
+            return $_SESSION;
     	} else {
-    		return false;
+            return $_SESSION;
     	}
     }
 
-    function curl_post($url)
+    function curl_post($url, $data)
     {
-    	$data = json_encode([
-    		'client_id' => $_SESSION['client_id'],
-    		'client_secret'=> $_SESSION['client_key'],
-    		'grant_type'=> 'client_credentials'
-    	]);
     	$curl = new Curl;
     	$curl->setHeader('Content-Type', 'application/json');
     	$curl->setHeader('Accept', 'application/json');
