@@ -68,7 +68,17 @@
         //     ],
         //     'parcel_job'    => [
         //         'is_pickup_required'    => $pk_req,
-        //         'pickup_address_id'     => 98989012,
+        //         'pickup_address'        => [
+        //             'name'              => get_option('sender_name'),
+        //             'phone_number'      => '+'.get_option('sender_phone'),
+        //             'email'             => get_option('sender_mail'),
+        //             'address'       => [
+        //                 'address1'  => get_option('sender_address_1'),
+        //                 'address2'  => get_option('sender_address_2'),
+        //                 'country'   => get_option('sender_country'),
+        //                 'postcode'  => get_option('sender_postal_code')
+        //             ]
+        //         ],
         //         'pickup_service_type'   => $post['pk_st'],
         //         'pickup_service_level'  => $post['pk_slv'],
         //         'pickup_date'           => date('Y-m-d', strtotime($post['pk_date'])),
@@ -77,6 +87,7 @@
         //             'end_time'          => parsing_time($post['pk_end']),
         //             'timezone'          => 'Asia/Singapore'
         //         ],
+        //         'pickup_approx_volume'  => 'Less than 3 Parcels',
         //         'pickup_instruction'    => $post['pk_inst'],
         //         'delivery_instruction'  => $post['dl_inst'],
         //         'delivery_start_date'   => date('Y-m-d', strtotime($post['dl_date'])),
@@ -87,55 +98,54 @@
         //         ]
         //     ]
         // ];
-        $data = '{  
-   "service_type":"Parcel",
-   "service_level":"Standard",
-   "requested_tracking_number":"759771305",
-   "reference":{  
-      "merchant_order_number":"SHIP-1234-56789"
-   },
-   "from":{  
-      "name":"Closet",
-      "phone_number":"+64448325",
-      "email":"natashasakuma@demarca.sg",
-      "address":{  
-         "address1":"6 Scotts Road",
-         "address2":"#03-10 Scotts Square",
-         "country":"SG",
-         "postcode":"228209"
-      }
-   },
-   "to":{  
-      "name":"Rafi Halilintar",
-      "phone":"+64448325",
-      "email":"masitingss@gmail.com",
-      "address":{  
-         "address1":"6 Scotts Road",
-         "address2":"#03-10 Scotts Square",
-         "country":"SG",
-         "postcode":"228209"
-      }
-   },
-   "parcel_job":{  
-      "is_pickup_required":true,
-      "pickup_address_id":98989012,
-      "pickup_service_type":null,
-      "pickup_service_level":null,
-      "pickup_date":"2019-06-22",
-      "pickup_timeslot":{  
-         "start_time":"9:00",
-         "end_time":"12:00",
-         "timezone":"Asia/Singapore"
-      },
-      "pickup_instruction":"Nonono",
-      "delivery_instruction":"nonoonono",
-      "delivery_start_date":"2019-06-23",
-      "delivery_timeslot":{  
-         "start_time":"9:00",
-         "end_time":"12:00",
-         "timezone":"Asia/Singapore"
-      }
-   }
+        
+        $data = '{
+  "service_type": "Parcel",
+  "service_level": "Standard",
+  "requested_tracking_number": "123456789",
+  "reference": {
+    "merchant_order_number": "SHIP-1234-56789"
+  },
+  "from": {
+    "name": "John Doe",
+    "phone_number": "+60122222222",
+    "email": "john.doe@gmail.com",
+    "address": {
+      "address1":"Perumnas nikan",
+      "address2":"Blok A5",
+      "country":"SG",
+      "postcode":"31626"
+    }
+  },
+  "to": {
+    "name": "Jane Doe",
+    "phone_number": "+6212222222222",
+    "email": "jane.doe@gmail.com",
+    "address": {
+        "address1":"Perumnas nikan",
+        "address2":"Blok A5",
+        "country":"SG",
+        "postcode":"31626"
+    }
+  },
+  "parcel_job": {
+    "is_pickup_required": true,
+    "pickup_service_type": "Scheduled",
+    "pickup_date": "2019-06-18T00:00:00.000Z",
+    "pickup_timeslot": {
+      "start_time": "09:00",
+      "end_time": "12:00",
+      "timezone": "Asia/Singapore"
+    },
+    "pickup_instruction": "Pickup with care!",
+    "delivery_instruction": "If recipient is not around, leave parcel in power riser.",
+    "delivery_start_date": "2019-06-19",
+    "delivery_timeslot": {
+      "start_time": "09:00",
+      "end_time": "22:00",
+      "timezone": "Asia/Singapore"
+    }
+  }
 }';
         // $result = json_encode($data);
         $response = curl_create_order($url, $data, $post['access_tokn']);
