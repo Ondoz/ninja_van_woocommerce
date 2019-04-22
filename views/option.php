@@ -20,32 +20,39 @@
                         <td>Action</td>
                     </thead>
                     <tbody>
-                        <?php foreach (get_all_order() as $key => $value): ?>
-                            <?php 
-                                $data  = get_order($value);
-                            ?>
-                            <?php if ($data->get_shipping_method() === 'NinjaVan Shipping'): ?>
-                                <?php if ($data->get_status() === 'processing'): ?>
-                                    <tr>
-                                        <td>#<?php echo $value;?></td>
-                                        <td><?php echo ucwords($data->get_payment_method());?></td>
-                                        <td><?php echo date('jS F Y', strtotime($data->get_date_created()));?></td>
-                                        <td>
-                                            <div class="btn-group">
-                                              <button type="button" class="btn btn-primary btn-xs shopOrder" data-id="<?php echo $value;?>">Ship Order</button>
-                                              <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
-                                                <span class="caret"></span>
-                                              </button>
-                                              <ul class="dropdown-menu" role="menu">
-                                                <li><a href="#" class="bill_det" data-id="<?php echo $value;?>">Billing Details</a></li>
-                                                <li><a href="#" class="shipDet" data-id="<?php echo $value;?>">Shipping Details</a></li>
-                                              </ul>
-                                            </div>
-                                        </td>
-                                    </tr>
+                        <?php if (count(get_all_order()) > 0): ?>
+                            <?php foreach (get_all_order() as $key => $value): ?>
+                                <?php 
+                                    $data  = get_order($value);
+                                ?>
+                                <?php if ($data->get_shipping_method() === 'NinjaVan Shipping'): ?>
+                                    <?php if ($data->get_status() === 'processing'): ?>
+                                        <tr>
+                                            <td>#<?php echo $value;?></td>
+                                            <td><?php echo ucwords($data->get_payment_method());?></td>
+                                            <td><?php echo date('jS F Y', strtotime($data->get_date_created()));?></td>
+                                            <td>
+                                                <div class="btn-group">
+                                                  <button type="button" class="btn btn-primary btn-xs shopOrder" data-id="<?php echo $value;?>">Ship Order</button>
+                                                  <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                                                    <span class="caret"></span>
+                                                  </button>
+                                                  <ul class="dropdown-menu" role="menu">
+                                                    <li><a href="#" class="bill_det" data-id="<?php echo $value;?>">Billing Details</a></li>
+                                                    <li><a href="#" class="shipDet" data-id="<?php echo $value;?>">Shipping Details</a></li>
+                                                  </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <?php endif ?>
                                 <?php endif ?>
-                            <?php endif ?>
-                        <?php endforeach ?>
+                            <?php endforeach ?>
+                        <?php else : ?>
+                            <tr>
+                                <td colspan="4" class="text-center">No Data</td>
+                            </tr>
+                        <?php endif ?>
+                        
                     </tbody>
                 </table>
             </div>
