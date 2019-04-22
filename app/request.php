@@ -23,6 +23,9 @@
         } elseif ($method === 'create_order') {
             $data = create_order($_POST);
             echo json_encode($data);
+        } elseif ($method === 'update_status') {
+            $data = update_order($_POST);
+            echo json_encode($data);
         }
     }
 

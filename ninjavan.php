@@ -18,6 +18,8 @@ register_activation_hook( __FILE__, 'create_db_ninja' );
 register_deactivation_hook( __FILE__, 'delete_db_ninja' );
 
 add_action('admin_menu', 'ninja_admin');
+add_action( 'init', 'register_shipment_order_status' );
+add_filter( 'wc_order_statuses', 'add_shipment_to_order_statuses' );
 
 use \Curl\Curl;
 

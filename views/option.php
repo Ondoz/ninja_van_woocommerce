@@ -4,6 +4,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.all.min.js"></script>
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+
 <div class="wrap">
     <h1><i class="fas fa-truck"></i> Ninja Van</h1>
     <div class="row">
@@ -468,13 +470,50 @@
             },
             success: function(resp)
             {
+                if (resp.status == 200) {
+                    update_order(resp);
+                } else {
+                    Swal.fire({
+                      type: 'error',
+                      title: resp.title,
+                      text: resp.message
+                    });
+                    $('#submitOrder').html('Submit Order');
+                    $('#submitOrder').attr('disabled', false);
+                    return false;
+                }
+            }
+        });
+    }
+
+    function update_order(e)
+    {
+        $('#submitOrder').html('<i class="fas fa-spin fa-spinner"></i> Update Order..');
+        $.ajax({
+            url: '<?php bloginfo('url');?>/wp-content/plugins/ninja_van/app/request.php',
+            type: 'POST',
+            dataType: 'JSON',
+            data: {
+                method: 'update_status',
+                ord_id: e.order_id,
+                track_number: e.tracking_number
+            },
+            success: function(resp)
+            {
                 $('#submitOrder').html('Submit Order');
                 $('#submitOrder').attr('disabled', false);
-
-                if (resp.tracking_number !== 'undefined') {
-                    alert('Oke Bosss');
+                if (resp.status == 200) {
+                    Swal.fire(
+                      'Success!',
+                      resp.message,
+                      'success'
+                    );
                 } else {
-                    alert('Gada boss, bisajadi error');
+                    Swal.fire({
+                      type: 'error',
+                      title: 'Oops...',
+                      text: resp.message
+                    });
                 }
             }
         });

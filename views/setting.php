@@ -50,11 +50,24 @@
                                 <label for="">Client ID</label>
                                 <input type="text" class="form-control" name="client_id" value="<?php echo get_option('ninja_client_id');?>">
                             </div>
-                        </div>
-                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="">Client Secret</label>
                                 <input type="password" class="form-control" name="client_key" value="<?php echo get_option('ninja_client_secret');?>">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="">Status After</label>
+                                <select name="status_after" class="form-control">
+                                    <?php foreach (wc_get_order_statuses() as $key => $value): ?>
+                                        <?php if ($key === get_option('status_after', 'wc-shipment')): ?>
+                                            <option value="<?php echo $key;?>" selected><?php echo $value;?></option>
+                                        <?php else :?>
+                                            <option value="<?php echo $key;?>"><?php echo $value;?></option>
+                                        <?php endif ?>
+                                    <?php endforeach ?>
+                                </select>
+                                <small>The status after for each order who has shipped by NinjaVan.</small>
                             </div>
                         </div>
                         <div class="col-md-12">

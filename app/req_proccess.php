@@ -23,9 +23,49 @@
     function parsing_time($time)
     {
         return date( 'g:i', strtotime($time) );
-
     }
 
+    function insert_db($order_id, $track_number)
+    {
+      global $wpdb;
+      $table_name = $wpdb->prefix . 'ninja_van';
+      $data = [
+        'order_id'    => $order_id,
+        'tracking_id' => $track_number
+      ];
+      if ($wpdb->insert($table_name, $data)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    function update_order($post)
+    {
+      $status = get_option('status_after', 'shipment');
+      $order = new WC_Order($post['ord_id']);
+      $message = 'Order has been shipped by Ninja Van with Tracking Number : '.$post['track_number'];
+      $status = $order->update_status($status, $message);
+      if ($status) {
+        if (insert_db($post['ord_id'], $post['track_number'])) {
+          $data = [
+            'status'  => 200,
+            'message' => $message
+          ];
+        } else {
+          $data = [
+            'status'  => 200,
+            'message' => 'Order has been created but not recorded in database'
+          ];
+        }
+      } else {
+        $data = [
+          'status'  => 500,
+          'message' => 'Fail to update the order! But the order has been created!'
+        ];
+      }
+      return $data;
+    }
 
     function create_order($post)
     {
@@ -46,7 +86,7 @@
             ],
             'from'                      => [
                 'name'          => get_option('sender_name'),
-                'phone_number'  => '+'.get_option('sender_phone'),
+                'phone_number'  => get_option('sender_phone'),
                 'email'         => get_option('sender_mail'),
                 'address'       => [
                     'address1'  => get_option('sender_address_1'),
@@ -57,7 +97,7 @@
             ],
             'to'                        => [
                 'name'          => $cust['first_name'].' '.$cust['last_name'],
-                'phone'         => '+'.$cust_bill['phone'],
+                'phone'         => $cust_bill['phone'],
                 'email'         => $cust_bill['email'],
                 'address'       => [
                     'address1'  => $cust['address_1'],
@@ -108,5 +148,21 @@
         
         $result = json_encode($data);
         $response = curl_create_order($url, $data, $post['access_tokn']);
-        return $response;
+        if (isset($response->error)) {
+          $resp = [
+            'status'  => 500,
+            'title'   => $response->error->title,
+            'message' => $response->error->message,
+          ];
+        } else {
+          $resp = [
+            'status'          => 200,
+            'order_id'        => $post['order_id'],
+            'tracking_number' => $response->tracking_number,
+            'service_type'    => $response->service_type,
+            'service_level'   => $response->service_level,
+          ];
+        }
+       
+        return $resp;
     }

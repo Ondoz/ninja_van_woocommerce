@@ -18,6 +18,7 @@
     {
         update_option('ninja_client_id', $_POST['client_id']);
         update_option('ninja_client_secret', $_POST['client_key']);
+        update_option('status_after', $_POST['status_after']);
         if ($_POST['sandbox'] === 'on') {
             update_option('ninja_sandbox', 1);
         } else {
