@@ -1,7 +1,7 @@
 <?php 
     function ninja_admin()
     {
-        add_menu_page('Ninja Van', 'Ninja Van', 'manage_options', 'ninjavan_opt', 'main_view_ninja', 'dashicons-admin-site');
+        add_menu_page('Ninja Van', 'Ninja Van', 'manage_options', 'ninjavan_opt', 'main_view_ninja', 'dashicons-cart');
         add_submenu_page('ninjavan_opt', 'Recent Orders', 'Recent Orders', 'manage_options', 'ninjavan_recent', 'recent_view_ninja');
         add_submenu_page('ninjavan_opt', 'Settings', 'Settings', 'manage_options', 'ninjavan_setting', 'setting_view_ninja');
         
