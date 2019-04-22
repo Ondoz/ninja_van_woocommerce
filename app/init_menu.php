@@ -2,13 +2,21 @@
     function ninja_admin()
     {
         add_menu_page('Ninja Van', 'Ninja Van', 'manage_options', 'ninjavan_opt', 'main_view_ninja', 'dashicons-admin-site');
+        add_submenu_page('ninjavan_opt', 'Recent Orders', 'Recent Orders', 'manage_options', 'ninjavan_recent', 'recent_view_ninja');
         add_submenu_page('ninjavan_opt', 'Settings', 'Settings', 'manage_options', 'ninjavan_setting', 'setting_view_ninja');
+        
     }
 
     function main_view_ninja()
     {
         LoadView('option');
     }
+
+    function recent_view_ninja()
+    {
+        LoadView('recent');
+    }
+
     function setting_view_ninja()
     {
         LoadView('setting');

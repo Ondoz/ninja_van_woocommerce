@@ -235,6 +235,20 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         	// var_dump();
         }
     }
+
+    function getData()
+    {
+        global $wpdb;
+        $table_name = $wpdb->prefix . "ninja_van";
+        $sql = "SELECT * FROM $table_name";
+        return $wpdb->get_results($sql);
+    }
+
+    function get_status_order($id)
+    {
+      $order = wc_get_order($id);
+      return $order->get_status();
+    }
  	
  	add_action( 'woocommerce_review_order_before_cart_contents', 'ninjavan_validate_order' , 10 );
     add_action( 'woocommerce_after_checkout_validation', 'ninjavan_validate_order' , 10 );
