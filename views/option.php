@@ -1,10 +1,9 @@
 <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.all.min.js"></script>
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<style>
-    
-</style>
 <div class="wrap">
     <h1><i class="fas fa-truck"></i> Ninja Van</h1>
     <div class="row">
@@ -305,14 +304,14 @@
         <div id="pickup">
             <div class="form-group">
                 <label for="">Pickup Service Type</label>
-                <select name="pickup_service_type" class="form-control">
+                <select id="pickup_service_type" class="form-control">
                     <option value="Scheduled">Scheduled</option>
                     <option value="On-Demand">On-Demand</option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="">Pickup Service Level</label>
-                <select name="pickup_service_level" class="form-control">
+                <select id="pickup_service_level" class="form-control">
                     <option value="Standard">Standard</option>
                     <option value="Premium">Premium</option>
                 </select>
@@ -357,6 +356,43 @@
                 <label for="">Delivery Instruction</label>
                 <input type="text" id="delivery_instruction" class="form-control">
             </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="">Size</label>
+                        <select class="form-control" id="dim_size">
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="">Weight</label>
+                        <input type="number" class="form-control" placeholder="in Kilograms" id="dim_weight">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Width</label>
+                        <input type="number" class="form-control" placeholder="in Centimeters" id="dim_width">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="">Length</label>
+                        <input type="number" class="form-control" placeholder="in Centimeters" id="dim_length">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Height</label>
+                        <input type="number" class="form-control" placeholder="in Centimeters" id="dim_height">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+
+            </div>
         </div>
         <div class="custom-control custom-checkbox">
           <input type="checkbox" class="custom-control-input" id="defaultChecked2" style="margin: 0;">
@@ -399,6 +435,7 @@
 
     function create_order(e)
     {
+        $('#submitOrder').html('<i class="fas fa-spin fa-spinner"></i> Creating Order..');
         var serv_lvl = $('#service_level').val();
         var req_track_n = $('#rtn').val();
         var ord_id = $('#order_id').val();
@@ -422,11 +459,23 @@
                 dl_inst: $('#delivery_instruction').val(),
                 dl_date: $('#dl_date').val(),
                 dl_start: $('#dl_start_time').val(),
-                dl_end: $('#dl_end_time').val()
+                dl_end: $('#dl_end_time').val(),
+                weight: $('#dim_width').val(),
+                width: $('#dim_width').val(),
+                length: $('#dim_length').val(),
+                height: $('#dim_height').val(),
+                size: $('#dim_size').val()
             },
             success: function(resp)
             {
-                console.log(resp);
+                $('#submitOrder').html('Submit Order');
+                $('#submitOrder').attr('disabled', false);
+
+                if (resp.tracking_number !== 'undefined') {
+                    alert('Oke Bosss');
+                } else {
+                    alert('Gada boss, bisajadi error');
+                }
             }
         });
     }
@@ -442,8 +491,6 @@
                 method: 'ship_order'
             },
             success: function(e){
-                $('#submitOrder').html('Submit Order');
-                $('#submitOrder').attr('disabled', false);
                 create_order(e);
             }
         })

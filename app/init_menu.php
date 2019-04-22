@@ -36,5 +36,6 @@
         update_option('sender_city', $_POST['city']);
         update_option('sender_country', $_POST['country']);
         update_option('sender_postal_code', $_POST['postcode']);
+        update_option('sender_mon', $_POST['mon']);
         return true;
     }

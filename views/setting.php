@@ -85,6 +85,10 @@
                                 <label for="">Email Address</label>
                                 <input type="email" class="form-control" name="email" value="<?php echo get_option('sender_mail');?>">
                             </div>
+                            <div class="form-group">
+                                <label for="">Merchant Order Number</label>
+                                <input type="text" class="form-control" name="mon" value="<?php echo get_option('sender_mon');?>">
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
