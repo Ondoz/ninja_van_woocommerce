@@ -218,12 +218,13 @@
             </div>
             <div class="form-group">
                 <label for="">Request Tracking Number</label>
-                <input type="text" class="form-control" id="rtn">
+                <input type="text" class="form-control" maxlength="9" id="rtn">
             </div>
         </div>
         <div class="custom-control custom-checkbox">
           <input type="checkbox" class="custom-control-input" id="pickupReq" style="margin: 0;">
-          <label class="custom-control-label" for="pickupReq" style="margin: 0;">Require pick up ?</label><br>
+          <label class="custom-control-label" for="pickupReq" style="margin: 0;">Step 2</label><br>
+          <small>Check the checkbox to continue to step 2 </small>
         </div>
         <br>
         <div id="pickup">
@@ -315,14 +316,11 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="defaultChecked2" style="margin: 0;">
+              <label class="custom-control-label" for="defaultChecked2" style="margin: 0;">The shipping details was correct.</label><br>
+              <small>if the shipping details wasn't correct, you can edit at <a target="_blank" href="<?php bloginfo('url');?>/wp-admin/edit.php?post_type=shop_order">orders</a> or ask the customer manually.</small>
             </div>
-        </div>
-        <div class="custom-control custom-checkbox">
-          <input type="checkbox" class="custom-control-input" id="defaultChecked2" style="margin: 0;">
-          <label class="custom-control-label" for="defaultChecked2" style="margin: 0;">The shipping details was correct.</label><br>
-          <small>if the shipping details wasn't correct, you can edit at <a target="_blank" href="<?php bloginfo('url');?>/wp-admin/edit.php?post_type=shop_order">orders</a> or ask the customer manually.</small>
         </div>
       </div>
       <div class="modal-footer">
@@ -396,11 +394,11 @@
                 if (resp.status == 200) {
                     update_order(resp);
                 } else {
-                    Swal.fire({
-                      type: 'error',
-                      title: resp.title,
-                      text: resp.message
-                    });
+                    swal({title: resp.title, text: resp.message, type: 
+                    "error"}).then(function(){ 
+                       location.reload();
+                       }
+                    );
                     $('#submitOrder').html('Submit Order');
                     $('#submitOrder').attr('disabled', false);
                     return false;
@@ -426,17 +424,17 @@
                 $('#submitOrder').html('Submit Order');
                 $('#submitOrder').attr('disabled', false);
                 if (resp.status == 200) {
-                    Swal.fire(
-                      'Success!',
-                      resp.message,
-                      'success'
+                    swal({title: "Success!", text: resp.message, type: 
+                    "success"}).then(function(){ 
+                       location.reload();
+                       }
                     );
                 } else {
-                    Swal.fire({
-                      type: 'error',
-                      title: 'Oops...',
-                      text: resp.message
-                    });
+                    swal({title: "Ooops..!", text: resp.message, type: 
+                    "error"}).then(function(){ 
+                       location.reload();
+                       }
+                    );
                 }
             }
         });
@@ -450,7 +448,7 @@
             type: 'POST',
             dataType: 'JSON',
             data: {
-                method: 'ship_order'
+                method: 'access_token'
             },
             success: function(e){
                 create_order(e);

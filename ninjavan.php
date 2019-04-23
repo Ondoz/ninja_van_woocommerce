@@ -9,6 +9,7 @@
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain: FixxDigital
  */
+
 include dirname(__FILE__) . '/vendor/autoload.php';
 include dirname(__FILE__) . '/app/activation.php';
 include dirname(__FILE__) . '/app/init_menu.php';
@@ -222,6 +223,101 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         $curl->setHeader('Accept', 'application/json');
         $curl->post($url, $data);
         return $curl->response;
+    }
+
+    function curl_generate_waybil($url, $data)
+    {
+        $curl = new Curl;
+        $curl->setHeader('Content-Type', 'application/json');
+        $curl->setHeader('Authorization', 'Bearer '.$data['token']);
+        $curl->setHeader('Accept', 'application/json');
+        $curl->get($url, array(
+            'tids' => $data['tids'],
+        ));
+        return $curl->response;
+    }
+
+    function generate_waybill($post)
+    {
+        $url = api_url().'/SG/2.0/reports/waybill';
+        $data = curl_generate_waybil($url, $post);
+        return $data;
+    }   
+
+
+    function cancel_ninjavan_status($order_id)
+    {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'ninja_van';
+        $data = [
+            'status'        => 'cancelled',
+            'modify_date'   => date('Y-m-d H:i:s')
+        ];
+        $upd = [
+            'order_id'      => $order_id
+        ];
+        $sts = $wpdb->update($table_name, $data, $upd);
+        if ($sts) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function cancel_order_status($order_id)
+    {
+        $order = new WC_Order($order_id);
+        $status = 'wc-cancelled';
+        $message = 'Order was cancelled through the Ninja Van by the administrator';
+        $status = $order->update_status($status, $message);
+        if ($status) {
+            if (cancel_ninjavan_status($order_id)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    
+
+    function curl_delete_order($data)
+    {
+        $url = api_url().'/SG/2.2/orders/'.$data['tids'];
+        $curl = new Curl;
+        $curl->setHeader('Content-Type', 'application/json');
+        $curl->setHeader('Authorization', 'Bearer '.$data['token']);
+        $curl->setHeader('Accept', 'application/json');
+        $curl->delete($url);
+        if (!$curl->error) {
+            $json = $curl->response;
+            if (isset($json->status)) {
+                if (cancel_order_status($data['order_id'])) {
+                    $data = [
+                        'status'    => 200,
+                        'message'   => 'Success to cancel the order!'
+                    ];   
+                } else {
+                    $data = [
+                        'status'    => 200,
+                        'message'   => 'Success to cancel the order! but the status are not changed.'
+                    ];
+                }
+            } else {
+                $data = [
+                    'status'    => 404,
+                    'message'   => 'Cannot find the tracking number with those ID'
+                ];
+            }
+        } else {
+            $data = [
+                'status'    => 404,
+                'message'   => 'Cannot find the tracking number with those ID'
+            ];
+        }
+
+        return $data;
     }
 
     function afterCheckout()

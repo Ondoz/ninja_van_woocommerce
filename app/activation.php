@@ -7,7 +7,10 @@
             $sql = "CREATE TABLE " . $table_name . "(
                     id INT unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
                     order_id varchar(255) NOT NULL,
-                    tracking_id varchar(255) NULL
+                    tracking_id varchar(255) NOT NULL,
+                    status varchar(255) NOT NULL,
+                    created_date varchar(255) NOT NULL,
+                    modify_date varchar(255) NOT NULL
                     )";
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
             dbDelta($sql);
@@ -18,13 +21,13 @@
     function delete_db_ninja()
     {
          global $wpdb;
-         $table_name = $wpdb->prefix . "pwvaldUser";
+         $table_name = $wpdb->prefix . "ninja_van";
          $sql = "DROP TABLE IF EXISTS $table_name;";
          $wpdb->query($sql);
     }
 
     function register_shipment_order_status() {
-        register_post_status( 'wc-awaiting-shipment', array(
+        register_post_status( 'wc-shipment', array(
             'label'                     => 'Shipment',
             'public'                    => true,
             'exclude_from_search'       => false,

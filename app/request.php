@@ -17,7 +17,7 @@
         } elseif ($method === 'rtn') {
             $data = random_rtn($_POST['id']);
             echo json_encode($data);
-        } elseif ($method === 'ship_order') {
+        } elseif ($method === 'access_token') {
             $data = requestApiToken();
             echo json_encode($data);
         } elseif ($method === 'create_order') {
@@ -25,6 +25,15 @@
             echo json_encode($data);
         } elseif ($method === 'update_status') {
             $data = update_order($_POST);
+            echo json_encode($data);
+        } elseif ($method === 'generate_waybill') {
+            $data = generate_waybill($_POST);
+            echo json_encode($data);
+        } elseif ($method === 'cancel_order') {
+            $data = curl_delete_order($_POST);
+            echo json_encode($data);
+        } elseif ($method === 'delete_order') {
+            $data = delete_order($_POST['order_id']);
             echo json_encode($data);
         }
     }

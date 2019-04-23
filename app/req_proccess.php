@@ -30,14 +30,28 @@
       global $wpdb;
       $table_name = $wpdb->prefix . 'ninja_van';
       $data = [
-        'order_id'    => $order_id,
-        'tracking_id' => $track_number
+        'order_id'      => $order_id,
+        'status'        => 'created',
+        'tracking_id'   => $track_number,
+        'created_date'  => date('Y-m-d H:i:s'),
+        'modify_date'  => date('Y-m-d H:i:s')
       ];
       if ($wpdb->insert($table_name, $data)) {
         return true;
       } else {
         return false;
       }
+    }
+
+    function delete_order($order_id)
+    {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'ninja_van';
+        $data = [
+            'order_id' => $order_id
+        ];
+        $wpdb->delete($table_name, $data);
+        return true;
     }
 
     function update_order($post)
@@ -152,7 +166,7 @@
           $resp = [
             'status'  => 500,
             'title'   => $response->error->title,
-            'message' => $response->error->message,
+            'message' => 'Please check your Billing address and Shipping, make sure it has correct field like postcode and country.',
           ];
         } else {
           $resp = [
